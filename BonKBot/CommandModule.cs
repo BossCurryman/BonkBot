@@ -29,7 +29,7 @@ namespace BonKBot
 
             if(auth)
             {
-                UpdateBonkScores(sender, user);
+                await UpdateBonkScores(sender, user);
                 await user.ModifyAsync(x => x.Channel = null);
                 string s = "Bonk, go to horny jail " + user.Username + "\n";
                 await Context.Channel.SendMessageAsync(s);
