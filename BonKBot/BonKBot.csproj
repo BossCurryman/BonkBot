@@ -13,4 +13,10 @@
     <Folder Include="Data\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Token.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

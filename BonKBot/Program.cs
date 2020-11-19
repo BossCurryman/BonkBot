@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -16,17 +18,19 @@ namespace BonKBot
 
         private DiscordSocketClient client;
         private AuthorityManager authManager;
-        private protected string token = "Nzc2Mzg0MTgzNzU1ODY2MTEy.X60GHQ.VWeK9F1lOLNu0FCe6PHZWHCuqqQ";
+        private protected string token;
         public async Task MainAsync()
         {
+            //Console.WriteLine(s);
+
+            token = OpenToken();
+
             DiscordSocketConfig conf = new DiscordSocketConfig();
             authManager = new AuthorityManager();
             conf.AlwaysDownloadUsers = true;
             client = new DiscordSocketClient(conf);
             client.Log += Log;
             Global.client = client;
-            //manage private keys better!!!!!!
-            //
             
             await client.LoginAsync(TokenType.Bot, token);
             await client.StartAsync();
@@ -34,6 +38,12 @@ namespace BonKBot
             client.GuildAvailable += GuildAvailable;
             client.GuildMembersDownloaded += GuildsDownloadedAsync;
             await Task.Delay(-1);
+        }
+
+        private string OpenToken()
+        {
+            StreamReader reader = new StreamReader("Token.txt");
+            return reader.ReadToEnd();
         }
 
         private async Task GuildsReady()
