@@ -1,12 +1,16 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Discord.Commands;
+using Xabe.FFmpeg;
 
-namespace BonKBot
+namespace BonkBot
 {
     public class CommandModule : ModuleBase<SocketCommandContext>
     {
@@ -29,10 +33,14 @@ namespace BonKBot
 
             if(auth)
             {
-                await UpdateBonkScores(sender, user);
+                Console.WriteLine("Got to point 1");
+                UpdateBonkScores(sender, user);
+
+                Console.WriteLine("got to point 2");
+
                 await user.ModifyAsync(x => x.Channel = null);
                 string s = "Bonk, go to horny jail " + user.Username + "\n";
-                await Context.Channel.SendMessageAsync(s);
+                await ReplyAsync(s);
             }
             else
             {
@@ -41,25 +49,55 @@ namespace BonKBot
                       
         }
 
-        private Task UpdateBonkScores(SocketGuildUser sender, SocketGuildUser bonkee)
+
+
+
+        //updates the score for the bonkee and the bonker
+        private void UpdateBonkScores(SocketGuildUser sender, SocketGuildUser bonkee)
         {
             //guild of sender and bonkee should never be different, no bonking across guilds
+            Console.WriteLine("Got to start of UpdateBonkScores");
             SocketGuild g = sender.Guild;
             Dictionary<SocketGuildUser, UserValues> dict = Global.authManager.AuthDictionary[g];
             if(!dict.ContainsKey(sender))
             {
-                dict.Add(sender, new UserValues(Authority.BonkGuard));
+                Console.WriteLine("Got to add sender");
+                Global.authManager.AuthDictionary.Add(g, sender, new UserValues(Authority.BonkGuard));
+                Console.WriteLine("complete add sender");
             }
             if (!dict.ContainsKey(bonkee))
             {
-                dict.Add(bonkee, new UserValues(Authority.BonkGuard));
+                Global.authManager.AuthDictionary.Add(g, bonkee, new UserValues(Authority.BonkGuard));
             }
-            dict[sender].TimesBonking++;
-            dict[bonkee].TimesBonked++;
-            return Task.CompletedTask;
+            //cant use dict here becasue modifying dict will not modify the resource it came from
+            Global.authManager.AuthDictionary[g, sender].TimesBonking++;
+            Global.authManager.AuthDictionary[g, bonkee].TimesBonked++;
+            Console.WriteLine("Got to end of UpdateBonkScores");
         }
 
         //TODO: non violent escort
 
+
+        [Command("debugSave")]
+        [Summary("Sends a user to horny jail.")]
+        [Alias("ds")]
+        public async Task DebugSaveCommandAsync()
+        {
+            if(Global.authManager.AuthoriseAction(Context.User as SocketGuildUser, Authority.Warden))
+            {
+                await WriteUsersToFileAsync(Context);
+                await ReplyAsync("Files should be saved!");
+            }
+            else
+            {
+                await ReplyAsync("Not High enough rank");
+            }
+        }
+
+        private async Task WriteUsersToFileAsync(SocketCommandContext context)
+        {
+            await Global.authManager.AuthDictionary.ExportGuildDictionaryAsync(@"exportTest.json");
+
+        }
     }
 }

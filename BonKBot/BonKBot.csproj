@@ -14,6 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BonkInterfacing\BonkInterfacing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Token.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

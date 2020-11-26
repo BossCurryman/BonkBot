@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BonkInterfacing;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -11,7 +12,7 @@ using Discord.WebSocket;
 
 
 
-namespace BonKBot
+namespace BonkBot
 {
     public enum Authority
     {
@@ -24,8 +25,9 @@ namespace BonKBot
 
     public class AuthorityManager
     {
-        internal Dictionary<SocketGuild, Dictionary< SocketGuildUser, UserValues>> AuthDictionary { get; private set; } 
-            = new Dictionary<SocketGuild, Dictionary<SocketGuildUser, UserValues>>();
+
+        internal CompoundKeyDictionary<SocketGuild, SocketGuildUser, UserValues> AuthDictionary { get; private set; }
+            = new CompoundKeyDictionary<SocketGuild, SocketGuildUser, UserValues>();
         private List<SocketGuild> guilds;
 
         //string dictPath = @"AuthorityDictionary.JSON";
@@ -66,19 +68,31 @@ namespace BonKBot
                 else
                 {
                     AuthDictionary[guild].Add(o as SocketGuildUser, new UserValues(Authority.Warden));
-                }
-                
-                
+                }         
             }
         }
 
         //whenevere the bot enters a new server, the owner is auto granted warden priveleges
         public Task AddedToServer(SocketGuild s)
         {
-            if(!AuthDictionary[s].ContainsKey(s.Owner))
+            try
+            {
+                AuthDictionary.Add(s, s.Owner, new UserValues(Authority.Warden));
+            }
+            catch (ArgumentException)
+            {
+                Console.WriteLine("Owner already exists");
+            }
+            /*
+            if (!AuthDictionary[s].ContainsKey(s.Owner))
             {
                 AuthDictionary[s].Add(s.Owner, new UserValues(Authority.Warden));
             }
+            else
+            {
+                Console.WriteLine("Owner already Exists");
+            }
+            */
             
             return Task.CompletedTask;
         }

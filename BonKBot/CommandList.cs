@@ -8,7 +8,7 @@ using Discord.WebSocket;
 using Discord.API;
 using Discord.Commands;
 
-namespace BonKBot
+namespace BonkBot
 {
     class CommandList
     {

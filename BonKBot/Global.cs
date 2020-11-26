@@ -5,7 +5,7 @@ using Discord;
 using Discord.WebSocket;
 using Discord.Commands;
 
-namespace BonKBot
+namespace BonkBot
 {
     public static class Global
     {

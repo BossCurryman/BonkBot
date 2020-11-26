@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -6,7 +7,7 @@ using Discord;
 using Discord.WebSocket;
 using Discord.Commands;
 
-namespace BonKBot
+namespace BonkBot
 {
     public class CommunicationModule : ModuleBase<SocketCommandContext>
     {
@@ -72,6 +73,7 @@ namespace BonKBot
             await ReplyAsync(s);
         }
 
+        //This probably isnt possible to implement, not working rght now
         [Command("Time")]
         [Summary("Shows the servers time and the time local to the user whom invoked")]
         [Alias("tm")]
@@ -96,6 +98,28 @@ namespace BonKBot
             builder.AddField("Times bonking someone", bonker);
             builder.Color = new Color(255, 0, 0);
             await ReplyAsync("Your stats, my liege:", false, builder.Build());
+        }
+
+        [Command("leaderboard")]
+        [Summary("Shows the servers hornies user and the servers most authoritive users")]
+        [Alias("lead", "ld")]
+        public async Task LeaderboardCommandAsync()
+        {
+            EmbedBuilder builder = new EmbedBuilder();
+            Dictionary<SocketGuildUser,UserValues> dict =  Global.authManager.AuthDictionary[Context.Guild];
+
+            List<SocketGuildUser> userList = new List<SocketGuildUser>(dict.Keys);
+            Comparer<SocketGuildUser> comp = Comparer<SocketGuildUser>.Create((u1, u2) => dict[u1].TimesBonked.CompareTo(dict[u2].TimesBonked));
+            userList.Sort(comp);
+
+            for(int i = 0; i < 3; i++)
+            {
+                SocketGuildUser u = userList[i];
+                builder.AddField("no. " + (i+1), u.ToString(),true);
+            }
+
+            builder.Color = new Color(255, 100, 100);
+            await ReplyAsync("Horny Leaderboards", false, builder.Build());
         }
     }
 }
