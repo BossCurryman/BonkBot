@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Discord.Commands;
-using Xabe.FFmpeg;
 
 namespace BonkBot
 {
