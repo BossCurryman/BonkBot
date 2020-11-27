@@ -21,7 +21,7 @@ namespace BonkBot
         private DiscordSocketClient client;
         private AuthorityManager authManager;
         private protected string token;
-
+        private static ulong Boss_CurrymanID = 516849730345631744;
         //
         public async Task MainAsync()
         {
@@ -31,6 +31,7 @@ namespace BonkBot
             authManager = new AuthorityManager();
             conf.AlwaysDownloadUsers = true;
             client = new DiscordSocketClient(conf);
+            Global.Boss_Curryman = client.GetUser(Boss_CurrymanID) as SocketGuildUser;
             client.Log += Log;
             Global.client = client;
 
@@ -44,6 +45,7 @@ namespace BonkBot
             await Task.Delay(-1);
 
         }
+
 
         private string OpenToken()
         {

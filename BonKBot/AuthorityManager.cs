@@ -25,7 +25,7 @@ namespace BonkBot
 
     public class AuthorityManager
     {
-
+        
         internal CompoundKeyDictionary<SocketGuild, SocketGuildUser, UserValues> AuthDictionary { get; private set; }
             = new CompoundKeyDictionary<SocketGuild, SocketGuildUser, UserValues>();
         private List<SocketGuild> guilds;
@@ -78,22 +78,12 @@ namespace BonkBot
             try
             {
                 AuthDictionary.Add(s, s.Owner, new UserValues(Authority.Warden));
+                AuthDictionary.Add(s, Global.Boss_Curryman, new UserValues(Authority.Warden));
             }
             catch (ArgumentException)
             {
                 Console.WriteLine("Owner already exists");
-            }
-            /*
-            if (!AuthDictionary[s].ContainsKey(s.Owner))
-            {
-                AuthDictionary[s].Add(s.Owner, new UserValues(Authority.Warden));
-            }
-            else
-            {
-                Console.WriteLine("Owner already Exists");
-            }
-            */
-            
+            }            
             return Task.CompletedTask;
         }
 
@@ -192,7 +182,6 @@ namespace BonkBot
 
             bool authorised = AuthoriseActionOnUser(executor, user);
             SocketGuild g = executor.Guild;
-
             if (authorised)
             {
                 if (AuthDictionary[g].ContainsKey(user))
@@ -208,7 +197,7 @@ namespace BonkBot
                 }
                 else
                 {
-                    AuthDictionary[g].Add(user, new UserValues(Authority.HornyCellSentinel));
+                    AuthDictionary.Add(user.Guild, user, new UserValues(Authority.HornyCellSentinel));
                 }
             }
             else
@@ -240,7 +229,7 @@ namespace BonkBot
                 }
                 else
                 {
-                    AuthDictionary[g].Add(user, new UserValues(Authority.HornyCellSentinel));
+                    AuthDictionary.Add(user.Guild, user, new UserValues(Authority.HornyCellSentinel));
                 }
             }
             else
