@@ -12,6 +12,6 @@ namespace BonkBot
         public static CommandService service;
         public static AuthorityManager authManager;
         public static DiscordSocketClient client;
-        public static SocketGuildUser Boss_Curryman;
+        //public static SocketGuildUser Boss_Curryman;
     }
 }

@@ -31,7 +31,7 @@ namespace BonkBot
             authManager = new AuthorityManager();
             conf.AlwaysDownloadUsers = true;
             client = new DiscordSocketClient(conf);
-            Global.Boss_Curryman = client.GetUser(Boss_CurrymanID) as SocketGuildUser;
+            //Global.Boss_Curryman = client.GetUser(Boss_CurrymanID) as SocketGuildUser;
             client.Log += Log;
             Global.client = client;
 
@@ -39,13 +39,11 @@ namespace BonkBot
             await client.StartAsync();
 
             client.Ready += GuildsReady;
-            client.GuildAvailable += GuildAvailable;
             client.GuildMembersDownloaded += GuildsDownloadedAsync;
 
             await Task.Delay(-1);
 
         }
-
 
         private string OpenToken()
         {
@@ -63,14 +61,9 @@ namespace BonkBot
             
             Global.authManager = authManager;
             Global.service = service;
-
-            //await authManager.AuthDictionary.ImportGuildDictionaryAsync(@"exportTest.json");
         }
 
-        private Task GuildAvailable(SocketGuild g)
-        {
-            return Task.CompletedTask;
-        }
+
 
         private async Task GuildsDownloadedAsync(SocketGuild g)
         {
@@ -81,7 +74,6 @@ namespace BonkBot
                 Console.WriteLine(u.ToString());
             }
             await authManager.AddedToServer(g);
-            //return Task.CompletedTask;
         }
 
         private Task Log(LogMessage msg)

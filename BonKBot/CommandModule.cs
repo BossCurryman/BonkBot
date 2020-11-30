@@ -36,6 +36,7 @@ namespace BonkBot
             {
                 await user.ModifyAsync(x => x.Mute = true);
                 UpdateBonkScores(sender, user);
+                //dont await, need to break before 3 seconds
                 ConnectAndPlayBonk(user.VoiceChannel, user);
 
                 
@@ -50,7 +51,7 @@ namespace BonkBot
         }
 
         [Command("uwu", RunMode = RunMode.Async)]
-        [Summary("Quarantines a furry")]
+        [Summary("Quarantines a furry //uniplemented")]
         public async Task UwuCommandAsync([Remainder][Summary("The user(s) to bonk, cannot be multiple users")] SocketGuildUser user)
         {
             /*
@@ -143,7 +144,6 @@ namespace BonkBot
         }
 
         //TODO: non violent escort
-
 
         //make this happen upon application shutdown and intermittently, or maybe every change without awaiting it
         [Command("debugSave")]

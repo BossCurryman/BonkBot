@@ -15,43 +15,43 @@ namespace BonkBot
         [Command("promote")]
         [Summary("Promotes a user one rank, this can only be performed upon a user by a user of higher ranking")]
         [Alias("prom", "pr")]
-        public Task PromoteCommandAsync([Remainder][Summary("Promotes a user 1 rank, only higher ranking user can do this")] SocketGuildUser user)
+        public async Task PromoteCommandAsync([Remainder][Summary("Promotes a user 1 rank, only higher ranking user can do this")] SocketGuildUser user)
         {
             try
             {
-                Authority a = Global.authManager.PromoteUser((SocketGuildUser)Context.User, user);
-                ReplyAsync(user.ToString() + " is now " + a.ToString());
+                Authority a = await Global.authManager.PromoteUser((SocketGuildUser)Context.User, user);
+                await ReplyAsync(user.ToString() + " is now " + a.ToString());
             }
             catch(EqualUserAuthroityException)
             {
-                ReplyAsync("You cant promote someone of equal power silly.");
+                await ReplyAsync("You cant promote someone of equal power silly.");
             }
             catch (UnauthorisedAuthroityException)
             {
-                ReplyAsync("You are not authorised to promote this person.");
+                await ReplyAsync("You are not authorised to promote this person.");
             }           
-            return Task.CompletedTask;
+            //return Task.CompletedTask;
         }
 
         [Command("demote")]
         [Summary("Demotes a user one rank, this can only be performed upon a user by a user of higher ranking")]
         [Alias("dem")]
-        public Task DemoteCommandAsync([Remainder][Summary("Demotes a user 1 rank, only higher ranking user can do this")] SocketGuildUser user)
+        public async Task DemoteCommandAsync([Remainder][Summary("Demotes a user 1 rank, only higher ranking user can do this")] SocketGuildUser user)
         {
             try
             {
-                Authority a = Global.authManager.DemoteUser((SocketGuildUser)Context.User, user);
-                ReplyAsync(user.ToString() + " is now " + a.ToString());
+                Authority a = await Global.authManager.DemoteUser((SocketGuildUser)Context.User, user);
+                await ReplyAsync(user.ToString() + " is now " + a.ToString());
             }
             catch (EqualUserAuthroityException)
             {
-                ReplyAsync("You cant demote someone of equal power silly.");
+                await ReplyAsync("You cant demote someone of equal power silly.");
             }
             catch (UnauthorisedAuthroityException)
             {
-                ReplyAsync("You are not authorised to demote this person.");
+                await ReplyAsync("You are not authorised to demote this person.");
             }            
-            return Task.CompletedTask;
+            //return Task.CompletedTask;
         }
 
     }

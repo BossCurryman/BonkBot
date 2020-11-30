@@ -78,7 +78,7 @@ namespace BonkBot
             try
             {
                 AuthDictionary.Add(s, s.Owner, new UserValues(Authority.Warden));
-                AuthDictionary.Add(s, Global.Boss_Curryman, new UserValues(Authority.Warden));
+                //AuthDictionary.Add(s, Global.Boss_Curryman, new UserValues(Authority.Warden));
             }
             catch (ArgumentException)
             {
@@ -177,7 +177,7 @@ namespace BonkBot
             };
         }
 
-        public Authority PromoteUser(SocketGuildUser executor, SocketGuildUser user)
+        public async Task<Authority> PromoteUser(SocketGuildUser executor, SocketGuildUser user)
         {
 
             bool authorised = AuthoriseActionOnUser(executor, user);
@@ -204,10 +204,13 @@ namespace BonkBot
             {
                 throw new UnauthorisedAuthroityException();
             }
+
+            await WriteUsersToFileAsync();
+
             return AuthDictionary[g][user].Auth;
         }
 
-        public Authority DemoteUser(SocketGuildUser executor, SocketGuildUser user)
+        public async Task<Authority> DemoteUser(SocketGuildUser executor, SocketGuildUser user)
         {
 
             bool authorised = AuthoriseActionOnUser(executor, user);
@@ -236,7 +239,15 @@ namespace BonkBot
             {
                 throw new UnauthorisedAuthroityException();
             }
+
+            await WriteUsersToFileAsync();
+
             return AuthDictionary[g][user].Auth;
+        }
+
+        private async Task WriteUsersToFileAsync()
+        {
+            await AuthDictionary.ExportGuildDictionaryAsync(@"exportTest.json");
         }
 
         //TODO: read und write a file containing all Authority shits
